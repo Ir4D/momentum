@@ -1,5 +1,7 @@
 'use strict';
 
+import playList from './playList.js';
+
 const time = document.querySelector('.time');
 const date = document.querySelector('.date');
 const dateOptions = {weekday: 'long', month: 'long', day: 'numeric'};
@@ -20,6 +22,15 @@ const quote = document.querySelector('.quote');
 const author = document.querySelector('.author');
 const changeQuote = document.querySelector('.change-quote');
 let quoteNumber;
+const audio = new Audio();
+const play = document.querySelector('.play');
+const playNext = document.querySelector('.play-next');
+const playPrev = document.querySelector('.play-prev');
+let isPlay = false;
+let playNum = 0;
+const playListLength = playList.length;
+const playArr = document.getElementsByTagName('li');
+const playListContainer = document.querySelector('.play-list');
 
 /* show current time */
 function showTime() {
@@ -163,3 +174,63 @@ async function getQuotes() {
 }
 getQuotes();
 changeQuote.addEventListener('click', getQuotes);
+
+
+/* audio player */
+function playAudio() {
+  document.querySelectorAll('.play-item').forEach(n => n.classList.remove('item-active'));
+  audio.src = playList[playNum].src;
+  playArr[playNum].classList.add('item-active');
+  audio.currentTime = 0;
+  if (!isPlay) {
+    audio.play();
+    isPlay = true;
+  } else {
+    audio.pause();
+    isPlay = false;
+  }
+}
+
+function toggleBtn() {
+  play.classList.toggle('pause');
+}
+
+function playNextAudio() {
+  if (playNum == (playListLength - 1)) {
+    playNum = 0;
+  } else {
+    playNum++;
+  }
+  if (!isPlay) {
+    play.classList.add('pause');
+  } 
+  isPlay = false;
+  playAudio();
+}
+
+function playPrevAudio() {
+  if (playNum == 0) {
+    playNum = playListLength - 1;
+  } else {
+    playNum--;
+  }
+  if (!isPlay) {
+    play.classList.add('pause');
+  } 
+  isPlay = false;
+  playAudio();
+}
+
+play.addEventListener('click', playAudio);
+play.addEventListener('click', toggleBtn);
+playNext.addEventListener('click', playNextAudio);
+playPrev.addEventListener('click', playPrevAudio);
+audio.addEventListener('ended', playNextAudio);
+
+playList.forEach(elem => {
+  const li = document.createElement('li');
+  li.classList.add('play-item');
+  li.textContent = elem.title;
+  playListContainer.append(li);
+});
+
