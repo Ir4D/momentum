@@ -32,6 +32,16 @@ const playListLength = playList.length;
 const playArr = document.getElementsByTagName('li');
 const playListContainer = document.querySelector('.play-list');
 
+
+playList.forEach(elem => {
+  const li = document.createElement('li');
+  li.classList.add('play-item');
+  li.classList.add('play-item__play');
+  li.textContent = elem.title;
+  playListContainer.append(li);
+});
+
+
 /* show current time */
 function showTime() {
   time.textContent = new Date().toLocaleTimeString();
@@ -158,6 +168,7 @@ window.addEventListener('load', () => {
   getWeather()
 });
 
+
 /* quote of the day */
 function getQuoteNumber(dataLength) {
   quoteNumber = Math.floor(Math.random() * dataLength);
@@ -177,11 +188,23 @@ changeQuote.addEventListener('click', getQuotes);
 
 
 /* audio player */
+const playLittle = document.querySelectorAll('.play-item');
+const audioPlayer = document.querySelector('.audio-player');
+const songName = document.querySelector('.song-name');
+for (let i = 0; i < playLittle.length; i++) {
+  playLittle[i].addEventListener('click', playAudioList(i));
+}
+
 function playAudio() {
-  document.querySelectorAll('.play-item').forEach(n => n.classList.remove('item-active'));
+  document.querySelectorAll('.play-item').forEach(n => {
+    n.classList.remove('item-active');
+  });
   audio.src = playList[playNum].src;
   playArr[playNum].classList.add('item-active');
+  songName.textContent = playList[playNum].title;
   audio.currentTime = 0;
+  toggleBtn();
+  toggleBtnMin();
   if (!isPlay) {
     audio.play();
     isPlay = true;
@@ -189,10 +212,24 @@ function playAudio() {
     audio.pause();
     isPlay = false;
   }
+  if (!isPlay) {
+    playLittle[playNum].classList.remove('play-item__pause');
+  }
 }
 
 function toggleBtn() {
   play.classList.toggle('pause');
+}
+
+function toggleBtnMin() {
+  for (let i = 0; i < playLittle.length; i++) {
+    if (playLittle[i].classList.contains('play-item__pause')) {
+      playLittle[i].classList.remove('play-item__pause');
+    }
+    if (i == playNum) {
+      playLittle[i].classList.toggle('play-item__pause');
+    }
+  }
 }
 
 function playNextAudio() {
@@ -206,6 +243,7 @@ function playNextAudio() {
   } 
   isPlay = false;
   playAudio();
+  toggleBtn();
 }
 
 function playPrevAudio() {
@@ -219,18 +257,80 @@ function playPrevAudio() {
   } 
   isPlay = false;
   playAudio();
+  toggleBtn();
+}
+
+function playAudioList(i) {
+  return function() {
+    if (isPlay && i == playNum) {
+      audio.pause();
+      isPlay = false;
+      toggleBtn();
+      playLittle[i].classList.remove('play-item__pause');
+    } else if (!isPlay) {
+      playNum = i;
+      playAudio();
+    } else {
+      playNum = i;
+      isPlay = false;
+      toggleBtn();
+      playAudio();
+    }
+  };
 }
 
 play.addEventListener('click', playAudio);
-play.addEventListener('click', toggleBtn);
 playNext.addEventListener('click', playNextAudio);
 playPrev.addEventListener('click', playPrevAudio);
 audio.addEventListener('ended', playNextAudio);
 
-playList.forEach(elem => {
-  const li = document.createElement('li');
-  li.classList.add('play-item');
-  li.textContent = elem.title;
-  playListContainer.append(li);
+
+/* advanced audio player */
+const timeline = audioPlayer.querySelector('.timeline');
+const volumeSlider = audioPlayer.querySelector('.volume-slider');
+
+audio.addEventListener("loadeddata", () => {
+  audioPlayer.querySelector('.time-audio .length').textContent = getTimeCode(audio.duration);
+  audio.volume = .50;
+}, 
+false);
+
+timeline.addEventListener('click', event => {
+  audio.currentTime = event.offsetX / parseInt(window.getComputedStyle(timeline).width) * audio.duration;
+}, 
+false);
+
+volumeSlider.addEventListener('click', event => {
+  audio.volume = event.offsetX / parseInt(window.getComputedStyle(volumeSlider).width);
+  audioPlayer.querySelector('.volume-percentage').style.width = audio.volume * 100 + '%';
+}, 
+false);
+
+setInterval(() => {
+  audioPlayer.querySelector('.progress').style.width = audio.currentTime / audio.duration * 100 + '%';
+  audioPlayer.querySelector('.time-audio .current').textContent = getTimeCode(audio.currentTime);
+}, 
+500);
+
+audioPlayer.querySelector('.volume').addEventListener('click', () => {
+  const volume = audioPlayer.querySelector('.volume-container .volume');
+  audio.muted = !audio.muted;
+  if (audio.muted) {
+    volume.classList.remove('volume-icon');
+    volume.classList.add('volume-icon__muted');
+  } else {
+    volume.classList.add('volume-icon');
+    volume.classList.remove('volume-icon__muted');
+  }
 });
+
+function getTimeCode(number) {
+  let sec = parseInt(number);
+  let min = parseInt(sec / 60);
+  sec -= min * 60;
+  const hour = parseInt(min / 60);
+  min -= hour * 60;
+  if (hour === 0) return `${min}:${String(sec % 60).padStart(2, 0)}`;
+  return `${String(hour).padStart(2, 0)}:${min}:${String(sec % 60).padStart(2, 0)}`;
+}
 
