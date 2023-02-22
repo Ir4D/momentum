@@ -331,6 +331,7 @@ body {
   min-height: 28px;
   font-size: 24px;
   margin-bottom: 20px;
+  text-transform: capitalize;
 }
 
 .greeting-container {
@@ -388,6 +389,18 @@ body {
 
 .author {
   min-height: 20px;
+}
+
+.lang {
+  align-self: flex-start;
+  background-color: transparent;
+  border: 1px solid #aaa9a9;
+  border-radius: 5px;
+  max-width: 50px;
+  width: 100%;
+  height: 25px;
+  color: #fff;
+  opacity: .8;
 }
 
 @media (max-width: 768px) {

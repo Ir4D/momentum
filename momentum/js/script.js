@@ -33,6 +33,39 @@ const playArr = document.getElementsByTagName('li');
 const playListContainer = document.querySelector('.play-list');
 
 
+const dateVars = {
+  'en': 'en-US',
+  'ru': 'ru-RU'
+}
+let timeOfDayNum;
+const placeHolderVars = {
+  'en': '[Enter name]',
+  'ru': '[Введите имя]'
+}
+const weatherVars = {
+  'city': {
+    'en': 'Minsk',
+    'ru': 'Минск'
+  },
+  'speed': {
+    'en': 'Wind speed',
+    'ru': 'Скорость ветра'
+  },
+  'speedUnit': {
+    'en': 'm/s',
+    'ru': 'м/с'
+  },
+  'humidity': {
+    'en': 'Humidity',
+    'ru': 'Влажность'
+  }
+}
+const greetingTranslation = {
+  'en': ['Good night,', 'Good morning,', 'Good afternoon,', 'Good evening,'],
+  'ru': ['Доброй ночи,', 'Доброе утро,', 'Добрый день,', 'Добрый вечер,']
+}
+const selectLang = document.querySelector('.lang');
+
 playList.forEach(elem => {
   const li = document.createElement('li');
   li.classList.add('play-item');
@@ -51,8 +84,9 @@ showTime();
 
 /* show date: 'Tuesday, 14 February' */
 function showDate() {
-  date.textContent = new Date().toLocaleDateString('en-GB', dateOptions);
-  setTimeout(showDate, 1000);
+  // date.textContent = new Date().toLocaleDateString('en-GB', dateOptions);
+  date.textContent = new Date().toLocaleDateString(dateVars[selectLang.value], dateOptions);
+  setTimeout(showDate, 100);
 }
 showDate();
 
@@ -62,14 +96,18 @@ function getTimeOfDay() {
   let timeOfDay;
   if (0 <= hours/6 && hours/6 < 1) {
     timeOfDay = 'night';
+    timeOfDayNum = 0;
   } else if (1 <= hours/6 && hours/6 < 2) {
     timeOfDay = 'morning';
+    timeOfDayNum = 1;
   } else if (2 <= hours/6 && hours/6 < 3) {
     timeOfDay = 'afternoon';
+    timeOfDayNum = 2;
   } else if (3 <= hours/6 && hours/6 < 4) {
     timeOfDay = 'evening';
+    timeOfDayNum = 3;
   };
-  greeting.textContent = `Good ${timeOfDay},`;
+  // greeting.textContent = `Good ${timeOfDay},`;
   setTimeout(getTimeOfDay, 1000);
   return timeOfDay;
 }
@@ -78,18 +116,27 @@ getTimeOfDay();
 /* add user name and city to the storage */
 function setLocalStorage() {
   localStorage.setItem('userName', userName.value);
-  localStorage.setItem('city', city.value);
+  // localStorage.setItem('city', city.value);
 }
 window.addEventListener('beforeunload', setLocalStorage);
+
+function setCity() {
+  localStorage.setItem('city', city.value);
+}
+city.addEventListener('change', setCity);
 
 function getLocalStorage() {
   if (localStorage.getItem('userName')) {
     userName.value = localStorage.getItem('userName');
+  } else {
+    userName.placeholder = placeHolderVars[selectLang.value];
   }
+
   if (localStorage.getItem('city')) {
     city.value = localStorage.getItem('city');
   } else {
-    city.value = 'Minsk';
+    // city.value = 'Minsk';
+    city.value = weatherVars['city'][selectLang.value];
   }
 }
 window.addEventListener('load', getLocalStorage);
@@ -139,9 +186,11 @@ slidePrev.addEventListener('click', getslidePrev);
 /* weather widget */
 async function getWeather() {
   if (city.value === '') {
-    city.value = 'Minsk';
+    // city.value = 'Minsk';
+    city.value = weatherVars['city'][selectLang.value];
   }
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city.value}&lang=en&appid=0fe1a130729e5592daaf209c9d35966d&units=metric`;
+  // const url = `https://api.openweathermap.org/data/2.5/weather?q=${city.value}&lang=en&appid=0fe1a130729e5592daaf209c9d35966d&units=metric`;
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city.value}&lang=${selectLang.value}&appid=0fe1a130729e5592daaf209c9d35966d&units=metric`;
   const res = await fetch(url);
   const data = await res.json();
   if (data.cod == '404' || !city.value === ' ') {
@@ -159,8 +208,10 @@ async function getWeather() {
     weatherIcon.classList.add(`owf-${data.weather[0].id}`);
     temperature.textContent = `${Math.floor(data.main.temp)}°C`;
     weatherDescription.textContent = data.weather[0].description;
-    wind.textContent = `Wind speed: ${Math.floor(data.wind.speed)} m/s`;
-    humidity.textContent = `Humidity: ${Math.floor(data.main.humidity)}%`;
+    // wind.textContent = `Wind speed: ${Math.floor(data.wind.speed)} m/s`;
+    wind.textContent = `${weatherVars['speed'][selectLang.value]}: ${Math.floor(data.wind.speed)} ${weatherVars['speedUnit'][selectLang.value]}`;
+    // humidity.textContent = `Humidity: ${Math.floor(data.main.humidity)}%`;
+    humidity.textContent = `${weatherVars['humidity'][selectLang.value]}: ${Math.floor(data.main.humidity)}%`;
   }
 }
 city.addEventListener('change', getWeather);
@@ -175,13 +226,22 @@ function getQuoteNumber(dataLength) {
   return quoteNumber;
 }
 
+
 async function getQuotes() {  
   const quotes = 'data.json';
   const res = await fetch(quotes);
   const data = await res.json();
   getQuoteNumber(data.length);
-  quote.textContent = data[quoteNumber].text;
-  author.textContent = data[quoteNumber].author;
+  // quote.textContent = data[quoteNumber].text;
+  // author.textContent = data[quoteNumber].author;
+  if (selectLang.value === 'en') {
+    quote.textContent = data[quoteNumber].en.text;
+    author.textContent = data[quoteNumber].en.author;
+  } else if (selectLang.value === 'ru') {
+    quote.textContent = data[quoteNumber].ru.text;
+    author.textContent = data[quoteNumber].ru.author;
+  }
+
 }
 getQuotes();
 changeQuote.addEventListener('click', getQuotes);
@@ -334,3 +394,27 @@ function getTimeCode(number) {
   return `${String(hour).padStart(2, 0)}:${min}:${String(sec % 60).padStart(2, 0)}`;
 }
 
+
+/* language change */
+selectLang.addEventListener('change', changeLangURL);
+
+function changeLangURL() {
+  let language = selectLang.value;
+  location.href = window.location.pathname + '#' + language;
+  location.reload();
+}
+
+function changeLang() {
+  let langHash = window.location.hash;
+  langHash = langHash.substr(1);
+  if (langHash != 'en' && langHash != 'ru') {
+    location.href = window.location.pathname + '#' + 'en';
+    location.reload();
+  }
+  selectLang.value = langHash;
+  greeting.innerHTML = greetingTranslation[langHash][timeOfDayNum];
+}
+changeLang();
+
+
+// localStorage.clear();
