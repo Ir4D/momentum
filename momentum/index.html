@@ -10,7 +10,7 @@
 </head>
 <body>
   <header class="header">
-    <div class="player">
+    <div class="player visible">
       <div class="audio-player">
         <div class="song-time">
           <div class="song-name">&nbsp;</div>
@@ -58,23 +58,51 @@
       <button class="slide-prev slider-icon"></button>
       <button class="slide-next slider-icon"></button>
     </div>
-    <time class="time"></time>
-    <date class="date"></date>
-    <div class="greeting-container">
+    <time class="time visible"></time>
+    <date class="date visible"></date>
+    <div class="greeting-container visible">
       <span class="greeting"></span>
-      <input type="text" class="name" />
+      <input type="text" class="name">
     </div>
   </main>
   <footer class="footer">
-    <button class="change-quote"></button>
-    <div>
-      <div class="quote"></div>
-      <div class="author"></div>
+    <div class="quote-container visible">
+      <button class="change-quote"></button>
+      <div class="quote-wrapper">
+        <div class="quote"></div>
+        <div class="author"></div>
+      </div>
     </div>
-    <select name="lang" class="lang">
-      <option value="en" selected>EN</option>
-      <option value="ru">RU</option>
-    </select>
+    <div class="settings-icon"></div>
+    <div class="settings">
+      <div class="heading-time setting-name">Time</div>
+      <div class="set-time switch-btn switch-on"></div>
+      <div class="heading-date setting-name">Date</div>
+      <div class="set-date switch-btn switch-on"></div>
+      <div class="heading-greeting setting-name">Greeting</div>
+      <div class="set-greeting switch-btn switch-on"></div>
+      <div class="heading-quote setting-name">Quote</div>
+      <div class="set-quote switch-btn switch-on"></div>
+      <div class="heading-weather setting-name">Weather</div>
+      <div class="set-weather switch-btn switch-on"></div>
+      <div class="heading-audio setting-name">Audio</div>
+      <div class="set-audio switch-btn switch-on"></div>
+      <div class="heading-todolist setting-name">ToDo list</div>
+      <div class="set-todolist switch-btn switch-on"></div>
+      <div class="heading-lang setting-name">Language</div>
+      <select class="set-lang lang select" name="lang">
+        <option value="en" selected>EN</option>
+        <option value="ru">RU</option>
+      </select>
+      <div class="heading-image setting-name">Image Source</div>
+      <select class="set-image select">
+        <option value="github" selected>GitHub</option>
+        <option value="unsplash">Unsplash API</option>
+        <option value="flickr">Flickr API</option>
+      </select>
+      <div class="heading-tag setting-name">Image Tag</div>
+      <input class="set-tag tag-input" type="text">
+    </div>
   </footer>
   <script type="module" src="js/script.js"></script>
 </body>

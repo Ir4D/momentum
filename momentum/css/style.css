@@ -391,17 +391,140 @@ body {
   min-height: 20px;
 }
 
-.lang {
-  align-self: flex-start;
+.settings-icon {
+  width: 30px;
+  height: 30px;
+  background-size: 30px 30px;
+  background-image: url("../assets/svg/settings.svg");
+  position: absolute;
+  left: 20px;
+  cursor: pointer;
+  opacity: .8;
+}
+
+.settings-icon:hover {
+  opacity: 1;
+  transition: 0.3s;
+}
+
+.settings {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 5px;
+  column-gap: 8px;
+  max-width: 260px;
+  align-items: center;
+  background-color: #cccccc21;
+  border: 2px solid #cccccc3a;
+  padding: 10px;
+  border-radius: 10px;
+  position: fixed;
+  left: -100%;
+  bottom: 60px;
+  transition: 0.7s;
+}
+
+.settings.open {
+  left: 60px;
+}
+
+.setting-name {
+  text-align: start;
+}
+
+.switch-btn {
+  display: inline-block;
+  position: relative;
+  width: 50px;
+  height: 26px;
+  border-radius: 19px;
+  background-color: #aaa9a937;
+  z-index: 0;
+  border: 2px solid #aaa9a9;
+  cursor: pointer;
+  /* opacity: .9; */
+  /* transition: 3s; */
+  justify-self: end;
+}
+
+.switch-btn:hover {
+  box-shadow: 0 1px 10px 0 #fff;
+  transition: 0.3s;
+}
+
+.switch-btn::after {
+  content: '';
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  border-radius: 17px;
+  background-color: #fff;
+  box-shadow: 0 1px 10px 0 #fff;
+  top: 2px;
+  /* left: 1px; */
+  z-index: 1;
+  transition: 0.3s;
+  text-align: end;
+}
+
+/* .switch-on {
+  background-color: #aaa9a937;
+} */
+
+.switch-on::after {
+  left: 25px;
+}
+
+.switch-off::after {
+  left: 3px;
+  background-color: #ccc;
+}
+
+.select {
   background-color: transparent;
   border: 1px solid #aaa9a9;
   border-radius: 5px;
-  max-width: 50px;
+  max-width: 110px;
   width: 100%;
   height: 25px;
   color: #fff;
   opacity: .8;
+  cursor: pointer;
+  justify-self: end;
 }
+
+.select:hover {
+  box-shadow: 0 1px 10px 0 #fff;
+  transition: 0.3s;
+}
+
+.lang {
+  max-width: 50px;
+}
+
+.tag-input {
+  width: 110px;
+  height: 23px;
+  border: 1px solid #aaa9a9;
+  border-radius: 5px;
+  padding: 2px;
+  justify-self: end;
+}
+
+.tag-input:hover {
+  box-shadow: 0 1px 10px 0 #fff;
+  transition: 0.3s;
+}
+
+.hide {
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.visible {
+  transition: 0.4s;
+}
+
 
 @media (max-width: 768px) {
   .time {

@@ -64,6 +64,52 @@ const greetingTranslation = {
   'en': ['Good night,', 'Good morning,', 'Good afternoon,', 'Good evening,'],
   'ru': ['Доброй ночи,', 'Доброе утро,', 'Добрый день,', 'Добрый вечер,']
 }
+const settingsVars = {
+  'time': {
+    'en': 'Time',
+    'ru': 'Время'
+  },
+  'date': {
+    'en': 'Date',
+    'ru': 'Дата'
+  },
+  'greeting': {
+    'en': 'Greeting',
+    'ru': 'Приветствие'
+  },
+  'quote': {
+    'en': 'Quote',
+    'ru': 'Цитата'
+  },
+  'weather': {
+    'en': 'Weather',
+    'ru': 'Погода'
+  },
+  'audio': {
+    'en': 'Audio',
+    'ru': 'Аудио'
+  },
+  'todolist': {
+    'en': 'ToDo List',
+    'ru': 'ToDo Список'
+  },
+  'language': {
+    'en': 'Language',
+    'ru': 'Язык'
+  },
+  'imgsrc': {
+    'en': 'Image Source',
+    'ru': 'Источник изображений'
+  },
+  'imgtag': {
+    'en': 'Image Tag',
+    'ru': 'Тэг изображений'
+  },
+  'placeholderTag': {
+    'en': 'Enter tag for API',
+    'ru': 'Введите тэг'
+  }
+}
 const selectLang = document.querySelector('.lang');
 
 playList.forEach(elem => {
@@ -415,6 +461,197 @@ function changeLang() {
   greeting.innerHTML = greetingTranslation[langHash][timeOfDayNum];
 }
 changeLang();
+
+
+/* API images */
+async function getLinkToImageUnsplash() {
+  let tag = 'nigth';
+  const url = `https://api.unsplash.com/photos/random?orientation=landscape&query=${tag}&client_id=B7uai_qStZx9jfAqxjJakxsJ5GEop8rDT-cQS4dZ_M0`;
+  const res = await fetch(url);
+  const data = await res.json();
+  console.log(data.urls.regular);
+}
+getLinkToImageUnsplash();
+
+async function getLinkToImageFlickr() {
+  let tag = 'morning'
+  const url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=653aa0c1b36f838ff095206a2d4c3b36&tags=${tag}&extras=url_l&format=json&nojsoncallback=1`;
+  const res = await fetch(url);
+  const data = await res.json();
+  console.log(data.photos.photo[Math.floor(Math.random() * 100)].url_l);
+}
+getLinkToImageFlickr()
+
+
+/* Settings */
+const settingsBtn = document.querySelector('.settings-icon');
+const settings = document.querySelector('.settings');
+
+settingsBtn.addEventListener('click', () => {
+  settings.classList.toggle('open');
+})
+
+document.addEventListener('click', (e) => {
+  const clickSettings = e.composedPath().includes(settings);
+  const clickSettingsBtn = e.composedPath().includes(settingsBtn);
+  if (!clickSettings && !clickSettingsBtn) {
+    settings.classList.remove('open');
+  }
+})
+
+// ${weatherVars['speed'][selectLang.value]}
+
+const headingTime = document.querySelector('.heading-time');
+const headingDate = document.querySelector('.heading-date');
+const headingGreeting = document.querySelector('.heading-greeting');
+const headingQuote = document.querySelector('.heading-quote');
+const headingWeather = document.querySelector('.heading-weather');
+const headingAudio = document.querySelector('.heading-audio');
+const headingTodolist = document.querySelector('.heading-todolist');
+const headingLang = document.querySelector('.heading-lang');
+const headingImgSrc = document.querySelector('.heading-image');
+const headingImgTag = document.querySelector('.heading-tag');
+const inputTag = document.querySelector('.tag-input');
+
+function setSettingsLang() {
+  headingTime.textContent = `${settingsVars['time'][selectLang.value]}`;
+  headingDate.textContent = `${settingsVars['date'][selectLang.value]}`;
+  headingGreeting.textContent = `${settingsVars['greeting'][selectLang.value]}`;
+  headingQuote.textContent = `${settingsVars['quote'][selectLang.value]}`;
+  headingWeather.textContent = `${settingsVars['weather'][selectLang.value]}`;
+  headingAudio.textContent = `${settingsVars['audio'][selectLang.value]}`;
+  headingTodolist.textContent = `${settingsVars['todolist'][selectLang.value]}`;
+  headingLang.textContent = `${settingsVars['language'][selectLang.value]}`;
+  headingImgSrc.textContent = `${settingsVars['imgsrc'][selectLang.value]}`;
+  headingImgTag.textContent = `${settingsVars['imgtag'][selectLang.value]}`;
+  inputTag.placeholder = `${settingsVars['placeholderTag'][selectLang.value]}`;
+}
+
+setSettingsLang();
+
+const settingTime = document.querySelector('.set-time');
+const settingDate = document.querySelector('.set-date');
+const settingGreeting = document.querySelector('.set-greeting');
+const settingQuote = document.querySelector('.set-quote');
+const settingWeather = document.querySelector('.set-weather');
+const settingAudio = document.querySelector('.set-audio');
+// const setTodolist = document.querySelector('.set-todolist');
+
+function hideTime() {
+  settingTime.classList.toggle('switch-off');
+  time.classList.toggle('hide');
+  if (settingTime.classList.contains('switch-off')) {
+    localStorage.setItem('currentTime', 'switch-off');
+  } else {
+    localStorage.setItem('currentTime', 'switch-on');
+  }
+}
+settingTime.addEventListener('click', hideTime);
+
+function hideDate() {
+  settingDate.classList.toggle('switch-off');
+  date.classList.toggle('hide');
+  if (settingDate.classList.contains('switch-off')) {
+    localStorage.setItem('currentDate', 'switch-off');
+  } else {
+    localStorage.setItem('currentDate', 'switch-on');
+  }
+}
+settingDate.addEventListener('click', hideDate);
+
+const greetingContainer = document.querySelector('.greeting-container');
+function hideGreeting() {
+  settingGreeting.classList.toggle('switch-off');
+  greetingContainer.classList.toggle('hide');
+  if (settingGreeting.classList.contains('switch-off')) {
+    localStorage.setItem('currentGreeting', 'switch-off');
+  } else {
+    localStorage.setItem('currentGreeting', 'switch-on');
+  }
+}
+settingGreeting.addEventListener('click', hideGreeting);
+
+const quoteContainer = document.querySelector('.quote-container');
+function hideQuote() {
+  settingQuote.classList.toggle('switch-off');
+  quoteContainer.classList.toggle('hide');
+  if (settingQuote.classList.contains('switch-off')) {
+    localStorage.setItem('currentQuote', 'switch-off');
+  } else {
+    localStorage.setItem('currentQuote', 'switch-on');
+  }
+}
+settingQuote.addEventListener('click', hideQuote);
+
+const weather = document.querySelector('.weather');
+function hideWeather() {
+  settingWeather.classList.toggle('switch-off');
+  weather.classList.toggle('hide');
+  if (settingWeather.classList.contains('switch-off')) {
+    localStorage.setItem('currentWeather', 'switch-off');
+  } else {
+    localStorage.setItem('currentWeather', 'switch-on');
+  }
+}
+settingWeather.addEventListener('click', hideWeather);
+
+const player = document.querySelector('.player');
+function hideAudio() {
+  settingAudio.classList.toggle('switch-off');
+  player.classList.toggle('hide');
+  if (settingAudio.classList.contains('switch-off')) {
+    localStorage.setItem('currentAudio', 'switch-off');
+  } else {
+    localStorage.setItem('currentAudio', 'switch-on');
+  }
+}
+settingAudio.addEventListener('click', hideAudio);
+
+function getLocalStorageSettings() {
+  if (localStorage.getItem('currentTime') == 'switch-off') {
+    settingTime.classList.add('switch-off');
+    time.classList.add('hide');
+  } else {
+      settingTime.classList.remove('switch-off');
+      time.classList.remove('hide');
+  }
+  if (localStorage.getItem('currentDate') == 'switch-off') {
+    settingDate.classList.add('switch-off');
+    date.classList.add('hide');
+  } else {
+    settingDate.classList.remove('switch-off');
+    date.classList.remove('hide');
+  }
+  if (localStorage.getItem('currentGreeting') == 'switch-off') {
+    settingGreeting.classList.add('switch-off');
+    greetingContainer.classList.add('hide');
+  } else {
+    settingGreeting.classList.remove('switch-off');
+    greetingContainer.classList.remove('hide');
+  }
+  if (localStorage.getItem('currentQuote') == 'switch-off') {
+    settingQuote.classList.add('switch-off');
+    quoteContainer.classList.add('hide');
+  } else {
+    settingQuote.classList.remove('switch-off');
+    quoteContainer.classList.remove('hide');
+  }
+  if (localStorage.getItem('currentWeather') == 'switch-off') {
+    settingWeather.classList.add('switch-off');
+    weather.classList.add('hide');
+  } else {
+    settingWeather.classList.remove('switch-off');
+    weather.classList.remove('hide');
+  }
+  if (localStorage.getItem('currentAudio') == 'switch-off') {
+    settingAudio.classList.add('switch-off');
+    player.classList.add('hide');
+  } else {
+    settingAudio.classList.remove('switch-off');
+    player.classList.remove('hide');
+  }
+}
+window.addEventListener('load', getLocalStorageSettings);
 
 
 // localStorage.clear();
