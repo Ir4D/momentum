@@ -191,6 +191,11 @@ function setTag() {
 }
 inputTag.addEventListener('change', setTag);
 
+function setImageSrc() {
+  localStorage.setItem('imgsrc', setImage.value);
+}
+setImage.addEventListener('change', setImageSrc);
+
 function getLocalStorage() {
   if (localStorage.getItem('userName')) {
     userName.value = localStorage.getItem('userName');
@@ -207,6 +212,12 @@ function getLocalStorage() {
     inputTag.value = localStorage.getItem('tag');
   } else {
     inputTag.value = timeOfDay;
+  }
+  if (localStorage.getItem('imgsrc')) {
+    setImage.value = localStorage.getItem('imgsrc');
+    setBg();
+  } else {
+    setImage.value = 'github';
   }
 }
 window.addEventListener('load', getLocalStorage);
@@ -268,7 +279,7 @@ function setBg() {
     getLinkToImageFlickr();
   }
 }
-setBg();
+// setBg();
 
 inputTag.addEventListener('change', () => {
   setBg();
@@ -369,7 +380,6 @@ async function getQuotes() {
     quote.textContent = data[quoteNumber].ru.text;
     author.textContent = data[quoteNumber].ru.author;
   }
-
 }
 getQuotes();
 changeQuote.addEventListener('click', getQuotes);
