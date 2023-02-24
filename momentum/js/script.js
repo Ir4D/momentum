@@ -111,6 +111,20 @@ const settingsVars = {
   }
 }
 const selectLang = document.querySelector('.lang');
+const headingTime = document.querySelector('.heading-time');
+const headingDate = document.querySelector('.heading-date');
+const headingGreeting = document.querySelector('.heading-greeting');
+const headingQuote = document.querySelector('.heading-quote');
+const headingWeather = document.querySelector('.heading-weather');
+const headingAudio = document.querySelector('.heading-audio');
+const headingTodolist = document.querySelector('.heading-todolist');
+const headingLang = document.querySelector('.heading-lang');
+const headingImgSrc = document.querySelector('.heading-image');
+const headingImgTag = document.querySelector('.heading-tag');
+const inputTag = document.querySelector('.tag-input');
+const setImage = document.querySelector('.set-image');
+let imglink;
+let link;
 
 playList.forEach(elem => {
   const li = document.createElement('li');
@@ -137,9 +151,10 @@ function showDate() {
 showDate();
 
 /* time of the day: morning, afternoon, evening, night */
+let timeOfDay;
 function getTimeOfDay() {
   const hours = new Date().getHours();
-  let timeOfDay;
+  // let timeOfDay;
   if (0 <= hours/6 && hours/6 < 1) {
     timeOfDay = 'night';
     timeOfDayNum = 0;
@@ -171,18 +186,27 @@ function setCity() {
 }
 city.addEventListener('change', setCity);
 
+function setTag() {
+  localStorage.setItem('tag', inputTag.value);
+}
+inputTag.addEventListener('change', setTag);
+
 function getLocalStorage() {
   if (localStorage.getItem('userName')) {
     userName.value = localStorage.getItem('userName');
   } else {
     userName.placeholder = placeHolderVars[selectLang.value];
   }
-
   if (localStorage.getItem('city')) {
     city.value = localStorage.getItem('city');
   } else {
     // city.value = 'Minsk';
     city.value = weatherVars['city'][selectLang.value];
+  }
+  if (localStorage.getItem('tag')) {
+    inputTag.value = localStorage.getItem('tag');
+  } else {
+    inputTag.value = timeOfDay;
   }
 }
 window.addEventListener('load', getLocalStorage);
@@ -194,6 +218,33 @@ function getRandomNum() {
 }
 getRandomNum()
 
+
+async function getLinkToImageUnsplash() {
+  const img = new Image();
+  let tag = inputTag.value;
+  const data = await fetch(`https://api.unsplash.com/photos/random?orientation=landscape&query=${tag}&client_id=B7uai_qStZx9jfAqxjJakxsJ5GEop8rDT-cQS4dZ_M0`);
+  const result = await data.json();
+  img.src = `${result.urls.regular}`;
+  img.onload = () => {
+    body.style.backgroundImage = `url('${result.urls.regular}')`;
+  }
+}
+// getLinkToImageUnsplash();
+
+
+async function getLinkToImageFlickr() {
+  const img = new Image();
+  let tag = inputTag.value;
+  let randomPhotoNum = Math.floor(Math.random() * 100);
+  const data = await fetch(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=0f15ff623f1198a1f7f52550f8c36057&tags=${tag}&extras=url_l&format=json&nojsoncallback=1`);
+  const result = await data.json();
+  img.src = `${result.photos.photo[randomPhotoNum].url_l}`;
+  img.onload = () => {
+    body.style.backgroundImage = `url('${result.photos.photo[randomPhotoNum].url_l}')`;
+  }
+}
+// getLinkToImageFlickr();
+
 function setBackground() {
   const img = new Image();
   let timeOfDay = getTimeOfDay();
@@ -204,28 +255,60 @@ function setBackground() {
   img.onload = () => {
     body.style.backgroundImage = `url('https://raw.githubusercontent.com/Ir4D/stage1-tasks/assets/images/${timeOfDay}/${randomNum}.jpg')`;
   }
-  return randomNum;
 }
-setBackground();
+// setBackground();
+
+
+function setBg() {
+  if (setImage.value === 'github') {
+    setBackground();
+  } else if (setImage.value === 'unsplash') {
+    getLinkToImageUnsplash();
+  } else if (setImage.value === 'flickr') {
+    getLinkToImageFlickr();
+  }
+}
+setBg();
+
+inputTag.addEventListener('change', () => {
+  setBg();
+})
+
+setImage.addEventListener('change', () => {
+  setBg();
+});
+
 
 /* background slider */
 function getSlideNext() {
-  if (randomNum == 20) {
-    randomNum = 1;
-  } else {
-    randomNum++;
+  if (setImage.value === 'github') {
+    if (randomNum == 20) {
+      randomNum = 1;
+    } else {
+      randomNum++;
+    }
+    setBackground();
+  } else if (setImage.value === 'unsplash') {
+    getLinkToImageUnsplash();
+  } else if (setImage.value === 'flickr') {
+    getLinkToImageFlickr();
   }
-  setBackground();
 }
 slideNext.addEventListener('click', getSlideNext);
 
 function getslidePrev() {
-  if (randomNum == 1) {
-    randomNum = 20;
-  } else {
-    randomNum--;
+  if (setImage.value === 'github') {
+    if (randomNum == 1) {
+      randomNum = 20;
+    } else {
+      randomNum--;
+    }
+    setBackground();
+  } else if (setImage.value === 'unsplash') {
+    getLinkToImageUnsplash();
+  } else if (setImage.value === 'flickr') {
+    getLinkToImageFlickr();
   }
-  setBackground();
 }
 slidePrev.addEventListener('click', getslidePrev);
 
@@ -271,7 +354,6 @@ function getQuoteNumber(dataLength) {
   quoteNumber = Math.floor(Math.random() * dataLength);
   return quoteNumber;
 }
-
 
 async function getQuotes() {  
   const quotes = 'data.json';
@@ -463,26 +545,6 @@ function changeLang() {
 changeLang();
 
 
-/* API images */
-async function getLinkToImageUnsplash() {
-  let tag = 'nigth';
-  const url = `https://api.unsplash.com/photos/random?orientation=landscape&query=${tag}&client_id=B7uai_qStZx9jfAqxjJakxsJ5GEop8rDT-cQS4dZ_M0`;
-  const res = await fetch(url);
-  const data = await res.json();
-  console.log(data.urls.regular);
-}
-getLinkToImageUnsplash();
-
-async function getLinkToImageFlickr() {
-  let tag = 'morning'
-  const url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=653aa0c1b36f838ff095206a2d4c3b36&tags=${tag}&extras=url_l&format=json&nojsoncallback=1`;
-  const res = await fetch(url);
-  const data = await res.json();
-  console.log(data.photos.photo[Math.floor(Math.random() * 100)].url_l);
-}
-getLinkToImageFlickr()
-
-
 /* Settings */
 const settingsBtn = document.querySelector('.settings-icon');
 const settings = document.querySelector('.settings');
@@ -498,20 +560,6 @@ document.addEventListener('click', (e) => {
     settings.classList.remove('open');
   }
 })
-
-// ${weatherVars['speed'][selectLang.value]}
-
-const headingTime = document.querySelector('.heading-time');
-const headingDate = document.querySelector('.heading-date');
-const headingGreeting = document.querySelector('.heading-greeting');
-const headingQuote = document.querySelector('.heading-quote');
-const headingWeather = document.querySelector('.heading-weather');
-const headingAudio = document.querySelector('.heading-audio');
-const headingTodolist = document.querySelector('.heading-todolist');
-const headingLang = document.querySelector('.heading-lang');
-const headingImgSrc = document.querySelector('.heading-image');
-const headingImgTag = document.querySelector('.heading-tag');
-const inputTag = document.querySelector('.tag-input');
 
 function setSettingsLang() {
   headingTime.textContent = `${settingsVars['time'][selectLang.value]}`;
