@@ -91,7 +91,7 @@ const settingsVars = {
   },
   'todolist': {
     'en': 'ToDo List',
-    'ru': 'ToDo Список'
+    'ru': 'Список задач'
   },
   'language': {
     'en': 'Language',
@@ -123,8 +123,32 @@ const headingImgSrc = document.querySelector('.heading-image');
 const headingImgTag = document.querySelector('.heading-tag');
 const inputTag = document.querySelector('.tag-input');
 const setImage = document.querySelector('.set-image');
-let imglink;
-let link;
+const todoVars = {
+  'today': {
+    'en': 'Today',
+    'ru': 'Сегодня'
+  },
+  'inbox': {
+    'en': 'Inbox',
+    'ru': 'Входящие'
+  },
+  'done': {
+    'en': 'Done',
+    'ru': 'Выполнено'
+  },
+  'text': {
+    'en': 'Add a todo to get started',
+    'ru': 'Добавьте задачу, чтобы начать'
+  },
+  'switch': {
+    'en': 'Switch to',
+    'ru': 'Перейти к'
+  },
+  'new': {
+    'en': 'New Todo',
+    'ru': 'Новая задача'
+  }
+}
 
 playList.forEach(elem => {
   const li = document.createElement('li');
@@ -229,7 +253,6 @@ function getRandomNum() {
 }
 getRandomNum()
 
-
 async function getLinkToImageUnsplash() {
   const img = new Image();
   let tag = inputTag.value;
@@ -279,7 +302,7 @@ function setBg() {
     getLinkToImageFlickr();
   }
 }
-// setBg();
+setBg();
 
 inputTag.addEventListener('change', () => {
   setBg();
@@ -584,7 +607,6 @@ function setSettingsLang() {
   headingImgTag.textContent = `${settingsVars['imgtag'][selectLang.value]}`;
   inputTag.placeholder = `${settingsVars['placeholderTag'][selectLang.value]}`;
 }
-
 setSettingsLang();
 
 const settingTime = document.querySelector('.set-time');
@@ -593,7 +615,7 @@ const settingGreeting = document.querySelector('.set-greeting');
 const settingQuote = document.querySelector('.set-quote');
 const settingWeather = document.querySelector('.set-weather');
 const settingAudio = document.querySelector('.set-audio');
-// const setTodolist = document.querySelector('.set-todolist');
+const settingTodolist = document.querySelector('.set-todolist');
 
 function hideTime() {
   settingTime.classList.toggle('switch-off');
@@ -665,6 +687,18 @@ function hideAudio() {
 }
 settingAudio.addEventListener('click', hideAudio);
 
+const todoContainer = document.querySelector('.todo-container');
+function hideTodo() {
+  settingTodolist.classList.toggle('switch-off');
+  todoContainer.classList.toggle('hide');
+  if (settingTodolist.classList.contains('switch-off')) {
+    localStorage.setItem('currentTodo', 'switch-off');
+  } else {
+    localStorage.setItem('currentTodo', 'switch-on');
+  }
+}
+settingTodolist.addEventListener('click', hideTodo);
+
 function getLocalStorageSettings() {
   if (localStorage.getItem('currentTime') == 'switch-off') {
     settingTime.classList.add('switch-off');
@@ -708,8 +742,166 @@ function getLocalStorageSettings() {
     settingAudio.classList.remove('switch-off');
     player.classList.remove('hide');
   }
+  if (localStorage.getItem('currentTodo') == 'switch-off') {
+    settingTodolist.classList.add('switch-off');
+    todoContainer.classList.add('hide');
+  } else {
+    settingTodolist.classList.remove('switch-off');
+    todoContainer.classList.remove('hide');
+  }
 }
 window.addEventListener('load', getLocalStorageSettings);
+
+
+
+/* Todo List */
+const todoMenu = document.querySelector('.todo-menu');
+const todoContent = document.querySelector('.todo-content');
+const todoToday = document.querySelector('.todo-today');
+const todoInbox = document.querySelector('.todo-inbox');
+const todoDone = document.querySelector('.todo-done');
+const todoBtn = document.querySelector('.todo-btn');
+const todoNew = document.querySelector('.todo-new');
+const todoHeading = document.querySelector('.todo-heading');
+const todoFolders = document.querySelector('.todo-folders');
+const todoBox = document.querySelector('.todo-box');
+const todoList = document.querySelector('.todo-list');
+const todoText = document.querySelector('.todo-text');
+const todoSwitch = document.querySelector('.todo-switch');
+let allTasks = [];
+
+if (localStorage.getItem('allTasks')) {
+  allTasks = JSON.parse(localStorage.getItem('allTasks'));
+  allTasks.forEach(function (task) {
+    const taskClass = task.done ? 'task-title task-done' : 'task-title';
+    const taskChecked = task.done ? 'checked' : '';
+    const taskTemplate = `<li id="${task.id}" class="todo-item task">
+                      <div class="task-info">
+                        <input type="checkbox" class="task-checkbox" ${taskChecked}>
+                        <span class="${taskClass}">${task.text}</span>
+                      </div>
+                      <div class="task-delete"></div>
+                    </li>`
+    todoList.insertAdjacentHTML('beforeend', taskTemplate);
+    todoContent.style.height = 'auto';
+    todoNew.value = '';
+  })
+}
+
+todoMenu.addEventListener('click', () => {
+  todoContent.classList.toggle('open');
+})
+
+document.addEventListener('click', (e) => {
+  const clicktodoContent = e.composedPath().includes(todoContent);
+  const clicktodoMenu = e.composedPath().includes(todoMenu);
+  if (!clicktodoContent && !clicktodoMenu) {
+    todoContent.classList.remove('open');
+  }
+})
+
+todoBtn.addEventListener('click', (e) => {
+  todoBtn.style.display = 'none';
+  todoNew.style.display = 'block';
+  todoNew.focus();
+})
+
+todoHeading.addEventListener('click', (e) => {
+  todoFolders.classList.toggle('open');
+  todoList.classList.toggle('closed');
+  if (todoFolders.classList.contains('open')) {
+    todoBox.classList.add('closed');
+  } else if (allTasks.length === 0) {
+    todoBox.classList.remove('closed');
+  }
+})
+
+getEmptyTodoList();
+
+function addTask() {
+  const taskText = todoNew.value;
+  const newTask = {
+    id: Date.now(),
+    text: taskText,
+    done: false,
+  };
+  allTasks.push(newTask);
+  const taskClass = newTask.done ? 'task-title task-done' : 'task-title';
+  const taskTemplate = `<li id="${newTask.id}" class="todo-item task">
+                    <div class="task-info">
+                      <input type="checkbox" class="task-checkbox">
+                      <span class="${taskClass}">${newTask.text}</span>
+                    </div>
+                    <div class="task-delete"></div>
+                  </li>`
+  todoList.insertAdjacentHTML('beforeend', taskTemplate);
+  todoContent.style.height = 'auto';
+  todoNew.value = '';
+
+  getEmptyTodoList();
+  setTodolist()
+}
+todoNew.addEventListener('change', addTask);
+
+function deleteTask(event) {
+  if (event.target.classList != 'task-delete') return;
+  const itemToDelete = event.target.closest('.task');
+
+  const id = Number(itemToDelete.id);
+  const index = allTasks.findIndex(function (task) {
+    return (task.id === id);
+  });
+  allTasks.splice(index, 1);
+  itemToDelete.remove();
+
+  getEmptyTodoList();
+  setTodolist()
+}
+todoList.addEventListener('click', deleteTask);
+
+function doTask(event) {
+  if (event.target.type == 'checkbox') {
+    event.target.closest('.task').querySelector('.task-title').classList.toggle('task-done');
+  } 
+  const id = Number(event.target.closest('.task').id);
+  const task = allTasks.find(function (task) {
+    return task.id === id;
+  });
+  task.done = !task.done;
+
+  setTodolist()
+}
+todoList.addEventListener('click', doTask);
+
+function getEmptyTodoList() {
+  if (allTasks.length === 0) {
+    // todoBox.style.display = 'block';
+    todoBox.classList.remove('closed');
+    todoBtn.style.display = 'flex';
+    todoNew.style.display = 'none';
+    todoContent.style.height = '220px';
+  } else {
+    todoNew.style.display = 'block';
+    // todoBox.style.display = 'none';
+    todoBox.classList.add('closed');
+  }
+}
+
+function setTodolist() {
+  localStorage.setItem('allTasks', JSON.stringify(allTasks));
+}
+
+
+function setTodoLang() {
+  todoToday.textContent = `${todoVars['today'][selectLang.value]}`;
+  todoInbox.textContent = `${todoVars['inbox'][selectLang.value]}`;
+  todoDone.textContent = `${todoVars['done'][selectLang.value]}`;
+  todoText.textContent = `${todoVars['text'][selectLang.value]}`;
+  todoSwitch.textContent = `${todoVars['switch'][selectLang.value]}`;
+  todoBtn.textContent = `${todoVars['new'][selectLang.value]}`;
+  todoNew.placeholder = `${todoVars['new'][selectLang.value]}`;
+}
+setTodoLang();
 
 
 // localStorage.clear();

@@ -391,6 +391,10 @@ body {
   min-height: 20px;
 }
 
+.footer-menues {
+  min-height: 30px;
+}
+
 .settings-icon {
   width: 30px;
   height: 30px;
@@ -419,7 +423,7 @@ body {
   padding: 10px;
   border-radius: 10px;
   position: fixed;
-  left: -100%;
+  left: -260px;
   bottom: 60px;
   transition: 0.7s;
 }
@@ -442,8 +446,6 @@ body {
   z-index: 0;
   border: 2px solid #aaa9a9;
   cursor: pointer;
-  /* opacity: .9; */
-  /* transition: 3s; */
   justify-self: end;
 }
 
@@ -461,15 +463,10 @@ body {
   background-color: #fff;
   box-shadow: 0 1px 10px 0 #fff;
   top: 2px;
-  /* left: 1px; */
   z-index: 1;
   transition: 0.3s;
   text-align: end;
 }
-
-/* .switch-on {
-  background-color: #aaa9a937;
-} */
 
 .switch-on::after {
   left: 25px;
@@ -524,6 +521,231 @@ body {
 .visible {
   transition: 0.4s;
 }
+
+.todo-menu {
+  cursor: pointer;
+  opacity: .8;
+  font-size: 20px;
+  position: absolute;
+  right: 20px;
+}
+
+.todo-menu:hover {
+  opacity: 1;
+  transition: 0.3s;
+}
+
+.todo-content {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 220px;
+  background-color: #cccccc21;
+  border: 2px solid #cccccc3a;
+  padding: 10px;
+  border-radius: 10px;
+  position: fixed;
+  right: -300px;
+  bottom: 60px;
+  transition: 0.7s;
+}
+
+.todo-content.open {
+  right: 20px;
+}
+
+.todo-heading {
+  display: flex;
+  /* margin-bottom: 10px; */
+}
+
+.todo-current {
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+.todo-current:hover {
+  cursor: pointer;
+}
+
+.todo-current:hover~.todo-arrow {
+  background-color: #2a2a2a;
+  box-shadow: 0 0 5px 0 #eee;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 1;
+  transition: 0.3s;
+}
+
+.todo-arrow {
+  align-self: center;
+  width: 20px;
+  height: 20px;
+  background-size: 20px 20px;
+  background-image: url("../assets/png/chevron-down.png");
+  opacity: .8;
+}
+
+.todo-arrow:hover {
+  background-color: #2a2a2a;
+  box-shadow: 0 0 5px 0 #eee;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 1;
+  transition: 0.3s;
+}
+
+.todo-list {
+  list-style: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.todo-list.closed {
+  display: none;
+}
+
+.task {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.task-checkbox {
+  vertical-align: middle;
+}
+
+.task-done {
+  text-decoration: line-through;
+}
+
+.task-delete {
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  background-image: url(../assets/png/bin.png);
+  vertical-align: middle;
+  opacity: .8;
+  transition: 0.3s;
+}
+
+.task-delete:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.todo-folders {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 180px;
+  height: 100px;
+  border: none;
+  border-radius: 10px;
+  background-color: #2a2a2a;
+  color: #ccc;
+  margin-top: 5px;
+  opacity: .8;
+  display: none;
+}
+
+.todo-folders.open {
+  display: flex;
+}
+
+.todo-elem {
+  cursor: pointer;
+  padding: 5px;
+  padding-left: 20px;
+  transition: 0.3s;
+}
+
+.todo-elem:hover {
+  display: list-item;
+  background-color: #757575;
+  color: #fff;
+}
+
+.count {
+  margin-left: 5px;
+}
+
+.todo-box {
+  margin-top: 20px;
+  padding-bottom: 30px;
+}
+
+.todo-box.closed {
+  display: none;
+}
+
+.todo-text {
+  margin-top: 10px;
+}
+
+.todo-switch {
+  color: #aaa9a9;
+  cursor: pointer;
+}
+
+.todo-switch:hover {
+  color: #fff;
+  transition: 0.3s;
+}
+
+.todo-switch span {
+  font-size: 18px;
+}
+
+.todo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2a2a2a;
+  box-shadow: 0 0 5px 0 #fff;
+  width: 130px;
+  height: 30px;
+  border-radius: 20px;
+  margin: 0 auto;
+  cursor: pointer;
+  opacity: .7;
+  transition: 0.3s;
+  margin-top: 14px;
+}
+
+.todo-btn:hover {
+  background-color: #aaa9a9;
+  color: #fff;
+  opacity: 1;
+}
+
+.todo-btn>span {
+  color: #fff;
+  opacity: 1;
+}
+
+.todo-new {
+  width: 100px;
+  font-size: 16px;
+  background: none;
+  border: none;
+  outline: none !important;
+  color: #fff;
+  opacity: 1;
+  align-self: flex-start;
+  transition: 0.3s;
+  margin-top: auto;
+  display: none;
+}
+
+.todo-new::placeholder {
+  font-size: 16px;
+  color: #ccc;
+}
+
 
 
 @media (max-width: 768px) {

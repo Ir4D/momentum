@@ -73,37 +73,65 @@
         <div class="author"></div>
       </div>
     </div>
-    <div class="settings-icon"></div>
-    <div class="settings">
-      <div class="heading-time setting-name">Time</div>
-      <div class="set-time switch-btn switch-on"></div>
-      <div class="heading-date setting-name">Date</div>
-      <div class="set-date switch-btn switch-on"></div>
-      <div class="heading-greeting setting-name">Greeting</div>
-      <div class="set-greeting switch-btn switch-on"></div>
-      <div class="heading-quote setting-name">Quote</div>
-      <div class="set-quote switch-btn switch-on"></div>
-      <div class="heading-weather setting-name">Weather</div>
-      <div class="set-weather switch-btn switch-on"></div>
-      <div class="heading-audio setting-name">Audio</div>
-      <div class="set-audio switch-btn switch-on"></div>
-      <div class="heading-todolist setting-name">ToDo list</div>
-      <div class="set-todolist switch-btn switch-on"></div>
-      <div class="heading-lang setting-name">Language</div>
-      <select class="set-lang lang select" name="lang">
-        <option value="en" selected>EN</option>
-        <option value="ru">RU</option>
-      </select>
-      <div class="heading-image setting-name">Image Source</div>
-      <select class="set-image select">
-        <option value="github" selected>GitHub</option>
-        <option value="unsplash">Unsplash API</option>
-        <option value="flickr">Flickr API</option>
-      </select>
-      <div class="heading-tag setting-name">Image Tag</div>
-      <input class="set-tag tag-input" type="text">
+    <div class="footer-menues">
+
+      <div class="settings-icon"></div>
+      <div class="settings">
+        <div class="heading-time setting-name">Time</div>
+        <div class="set-time switch-btn switch-on"></div>
+        <div class="heading-date setting-name">Date</div>
+        <div class="set-date switch-btn switch-on"></div>
+        <div class="heading-greeting setting-name">Greeting</div>
+        <div class="set-greeting switch-btn switch-on"></div>
+        <div class="heading-quote setting-name">Quote</div>
+        <div class="set-quote switch-btn switch-on"></div>
+        <div class="heading-weather setting-name">Weather</div>
+        <div class="set-weather switch-btn switch-on"></div>
+        <div class="heading-audio setting-name">Audio</div>
+        <div class="set-audio switch-btn switch-on"></div>
+        <div class="heading-todolist setting-name">ToDo list</div>
+        <div class="set-todolist switch-btn switch-on"></div>
+        <div class="heading-lang setting-name">Language</div>
+        <select class="set-lang lang select" name="lang">
+          <option value="en" selected>EN</option>
+          <option value="ru">RU</option>
+        </select>
+        <div class="heading-image setting-name">Image Source</div>
+        <select class="set-image select">
+          <option value="github" selected>GitHub</option>
+          <option value="unsplash">Unsplash API</option>
+          <option value="flickr">Flickr API</option>
+        </select>
+        <div class="heading-tag setting-name">Image Tag</div>
+        <input class="set-tag tag-input" type="text">
+      </div>
+      <div class="todo-container">
+        <div class="todo-menu">Todo</div>
+        <div class="todo-content">
+          <div class="todo-heading current-todo">
+            <div class="todo-current">Today</div>
+            <div class="todo-arrow"></div>
+          </div>
+          <div>
+            <ul class="todo-list"></ul>
+          </div>
+          <div>
+            <ul class="todo-folders">
+              <li class="todo-elem todo-inbox">Inbox <span class="count-inbox count">0</span></li>
+              <li class="todo-elem todo-today">Today <span class="count-today count">0</span></li>
+              <li class="todo-elem todo-done">Done <span class="count-done count">0</span></li>
+            </ul>
+          </div>
+          <div class="todo-box">
+            <p class="todo-text">Add a todo to get started</p>
+            <div class="todo-switch">Switch to<span>&nbsp;&#8250;</span></div>
+            <div class="todo-btn"><span>New Todo</span></div>
+          </div>
+          <input class="todo-new" placeholder="&nbsp;New Todo"></input>
+        </div>
+      </div>
     </div>
-  </footer>
-  <script type="module" src="js/script.js"></script>
+    </footer>
+    <script type="module" src="js/script.js"></script>
 </body>
 </html>
