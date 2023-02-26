@@ -91,6 +91,10 @@ const settingsVars = {
     'en': 'ToDo List',
     'ru': 'Список задач'
   },
+  'links': {
+    'en': 'Links',
+    'ru': 'Ссылки'
+  },
   'language': {
     'en': 'Language',
     'ru': 'Язык'
@@ -126,6 +130,10 @@ const todoVars = {
     'en': 'Todo List',
     'ru': 'Список задач'
   },
+  'menu': {
+    'en': 'Todo',
+    'ru': 'Задачи'
+  },
   'text': {
     'en': 'Add a todo to get started',
     'ru': 'Добавьте задачу, чтобы начать'
@@ -133,6 +141,32 @@ const todoVars = {
   'new': {
     'en': 'New Todo',
     'ru': 'Новая задача'
+  }
+}
+const linksVars = {
+  'heading': {
+    'en': 'Links',
+    'ru': 'Ссылки'
+  },
+  'new': {
+    'en': 'New Link',
+    'ru': 'Новая ссылка'
+  },
+  'name': {
+    'en': 'Name',
+    'ru': 'Название'
+  },
+  'address': {
+    'en': 'Link',
+    'ru': 'Ссылка'
+  },
+  'create': {
+    'en': 'Create',
+    'ru': 'Создать'
+  },
+  'save': {
+    'en': 'Save',
+    'ru': 'Сохранить'
   }
 }
 
@@ -152,14 +186,16 @@ function showTime() {
 }
 showTime();
 
-/* show date: 'Tuesday, 14 February' */
+
+/* show date */
 function showDate() {
   date.textContent = new Date().toLocaleDateString(dateVars[selectLang.value], dateOptions);
   setTimeout(showDate, 100);
 }
 showDate();
 
-/* time of the day: morning, afternoon, evening, night */
+
+/* time of the day */
 let timeOfDay;
 function getTimeOfDay() {
   const hours = new Date().getHours();
@@ -180,6 +216,7 @@ function getTimeOfDay() {
   return timeOfDay;
 }
 getTimeOfDay();
+
 
 /* add user name and city to the storage */
 function setLocalStorage() {
@@ -226,6 +263,7 @@ function getLocalStorage() {
   }
 }
 window.addEventListener('load', getLocalStorage);
+
 
 /* background renew */
 function getRandomNum() {
@@ -321,6 +359,7 @@ function getslidePrev() {
   }
 }
 slidePrev.addEventListener('click', getslidePrev);
+
 
 /* weather widget */
 async function getWeather() {
@@ -586,6 +625,7 @@ const settingQuote = document.querySelector('.set-quote');
 const settingWeather = document.querySelector('.set-weather');
 const settingAudio = document.querySelector('.set-audio');
 const settingTodolist = document.querySelector('.set-todolist');
+const settingLinkslist = document.querySelector('.set-links');
 
 function hideTime() {
   settingTime.classList.toggle('switch-off');
@@ -669,13 +709,25 @@ function hideTodo() {
 }
 settingTodolist.addEventListener('click', hideTodo);
 
+const LinksContainer = document.querySelector('.links-container');
+function hideLinks() {
+  settingLinkslist.classList.toggle('switch-off');
+  LinksContainer.classList.toggle('hide');
+  if (settingLinkslist.classList.contains('switch-off')) {
+    localStorage.setItem('currentLinks', 'switch-off');
+  } else {
+    localStorage.setItem('currentLinks', 'switch-on');
+  }
+}
+settingLinkslist.addEventListener('click', hideLinks);
+
 function getLocalStorageSettings() {
   if (localStorage.getItem('currentTime') == 'switch-off') {
     settingTime.classList.add('switch-off');
     time.classList.add('hide');
   } else {
-      settingTime.classList.remove('switch-off');
-      time.classList.remove('hide');
+    settingTime.classList.remove('switch-off');
+    time.classList.remove('hide');
   }
   if (localStorage.getItem('currentDate') == 'switch-off') {
     settingDate.classList.add('switch-off');
@@ -718,6 +770,13 @@ function getLocalStorageSettings() {
   } else {
     settingTodolist.classList.remove('switch-off');
     todoContainer.classList.remove('hide');
+  }
+  if (localStorage.getItem('currentLinks') == 'switch-off') {
+    settingLinkslist.classList.add('switch-off');
+    LinksContainer.classList.add('hide');
+  } else {
+    settingLinkslist.classList.remove('switch-off');
+    LinksContainer.classList.remove('hide');
   }
 }
 window.addEventListener('load', getLocalStorageSettings);
@@ -844,10 +903,175 @@ function setTodolist() {
 
 function setTodoLang() {
   todoHeading.textContent = `${todoVars['heading'][selectLang.value]}`;
+  todoMenu.textContent = `${todoVars['menu'][selectLang.value]}`;
   todoText.textContent = `${todoVars['text'][selectLang.value]}`;
   todoBtn.textContent = `${todoVars['new'][selectLang.value]}`;
   todoNew.placeholder = `${todoVars['new'][selectLang.value]}`;
 }
 setTodoLang();
 
-// localStorage.clear();
+
+/* Links */
+const linksMenu = document.querySelector('.links-menu');
+const linksContent = document.querySelector('.links-content');
+const linksNew = document.querySelector('.links-new');
+const linksList = document.querySelector('.links-list');
+const linksStart = document.querySelector('.links-start');
+const linksAdd = document.querySelector('.links-add');
+const linksEdition = document.querySelector('.links-edition');
+const linksBack = document.querySelector('.links-back');
+const linksBackEdit = document.querySelector('.links-back-edit');
+const linksCreate = document.querySelector('.link-create');
+const linksSave = document.querySelector('.link-save');
+const nameEdit = document.querySelector('.name-edit');
+const addressEdit = document.querySelector('.address-edit');
+const nameInput = document.querySelector('.name-input');
+const addressInput = document.querySelector('.address-input');
+const linkName = document.querySelector('.link-name');
+const linkNameEdit = document.querySelector('.link-name-edit');
+const linkAddress = document.querySelector('.link-address');
+const linkAddressEdit = document.querySelector('.link-address-edit');
+let allLinks = [];
+
+linksMenu.addEventListener('click', () => {
+  linksContent.classList.toggle('open');
+})
+
+document.addEventListener('click', (e) => {
+  const clicklinksContent = e.composedPath().includes(linksContent);
+  const clicklinksMenu= e.composedPath().includes(linksMenu);
+  if (!clicklinksContent && !clicklinksMenu) {
+    linksContent.classList.remove('open');
+  }
+})
+
+function getLinksList() {
+  if (localStorage.getItem('allLinks')) {
+    allLinks = JSON.parse(localStorage.getItem('allLinks'));
+    allLinks.forEach(function (link) {
+      const linkTemplate = `<li id="${link.id}" class="links-item link links">
+      <div class="links-text"><a href="${link.address}">${link.text}</a></div>
+      <div class="links-wrapper">
+        <div class="links-edit"></div>
+        <div class="links-delete"></div>
+      </div>
+      </li>`
+      linksList.insertAdjacentHTML('beforeend', linkTemplate);
+    })
+  }
+}
+window.addEventListener('load', getLinksList);
+
+function addNewLink() {
+  linksStart.classList.add('closed');
+  linksAdd.classList.remove('closed');
+}
+linksNew.addEventListener('click', addNewLink);
+
+function backToLinksList() {
+  linksStart.classList.remove('closed');
+  linksAdd.classList.add('closed');
+}
+linksBack.addEventListener('click', backToLinksList);
+
+function backToLinksListFromEdit() {
+  linksStart.classList.remove('closed');
+  linksEdition.classList.add('closed');
+}
+linksBackEdit.addEventListener('click', backToLinksListFromEdit);
+
+function createLink() {
+  if (!nameInput.value || !addressInput.value) {
+    if (!nameInput.value) {
+      nameInput.placeholder = 'Enter the name';
+      nameInput.classList.add('bright');
+    }
+    if (!addressInput.value) {
+      addressInput.placeholder = 'Enter the address';
+      addressInput.classList.add('bright');
+    }
+  } else {
+    const linkText = nameInput.value;
+    const linkAddress = addressInput.value;
+    const newLink = {
+      id: Date.now(),
+      text: linkText,
+      address: linkAddress
+    };
+    allLinks.push(newLink);
+    const linkTemplate = `<li id="${newLink.id}" class="links-item link links">
+    <div class="links-text"><a href="${newLink.address}">${newLink.text}</a></div>
+    <div class="links-wrapper">
+      <div class="links-edit"></div>
+      <div class="links-delete"></div>
+    </div>
+    </li>`
+    linksList.insertAdjacentHTML('beforeend', linkTemplate);
+    getEmptyLinksList();
+    setLinkslist();
+    backToLinksList();
+  }
+}
+linksCreate.addEventListener('click', createLink);
+
+function deleteLink(event) {
+  if (event.target.classList != 'links-delete') return;
+  const itemToDelete = event.target.closest('.links');
+  const id = Number(itemToDelete.id);
+  const index = allLinks.findIndex(function (links) {
+    return (links.id === id);
+  });
+  allLinks.splice(index, 1);
+  itemToDelete.remove();
+  setLinkslist();
+}
+linksList.addEventListener('click', deleteLink);
+
+function editLink(event) {
+  if (event.target.classList != 'links-edit') return;
+  linksStart.classList.add('closed');
+  linksEdition.classList.remove('closed');
+  const itemToEdit = event.target.closest('.links');
+  const id = Number(itemToEdit.id);
+  const index = allLinks.findIndex(function (links) {
+    return (links.id === id);
+  });
+  nameEdit.value = allLinks[index].text;
+  addressEdit.value = allLinks[index].address;
+  function saveEdit(index) {
+    console.log(allLinks[index].text);
+    allLinks[index].text = nameEdit.value;
+    allLinks[index].address = addressEdit.value;
+    getEmptyLinksList();
+    backToLinksListFromEdit();
+    setLinkslist();
+    location.reload();
+  }
+  linksSave.addEventListener('click', () => {
+    saveEdit(index);
+  })
+}
+linksList.addEventListener('click', editLink);
+
+function setLinkslist() {
+  localStorage.setItem('allLinks', JSON.stringify(allLinks));
+}
+
+function getEmptyLinksList() {
+  nameInput.value = '';
+  nameInput.classList.remove('bright');
+  addressInput.value = '';
+  addressInput.classList.remove('bright');
+}
+
+function setLinksLang() {
+  linksMenu.textContent = `${linksVars['heading'][selectLang.value]}`;
+  linksNew.textContent = `${linksVars['new'][selectLang.value]}`;
+  linkName.textContent = `${linksVars['name'][selectLang.value]}`;
+  linkNameEdit.textContent = `${linksVars['name'][selectLang.value]}`;
+  linkAddress.textContent = `${linksVars['address'][selectLang.value]}`;
+  linkAddressEdit.textContent = `${linksVars['address'][selectLang.value]}`;
+  linksCreate.textContent = `${linksVars['create'][selectLang.value]}`;
+  linksSave.textContent = `${linksVars['save'][selectLang.value]}`;
+}
+setLinksLang();

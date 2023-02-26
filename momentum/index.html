@@ -90,6 +90,8 @@
         <div class="set-audio switch-btn switch-on"></div>
         <div class="heading-todolist setting-name">ToDo list</div>
         <div class="set-todolist switch-btn switch-on"></div>
+        <div class="heading-linkslist setting-name">Links</div>
+        <div class="set-links switch-btn switch-on"></div>
         <div class="heading-lang setting-name">Language</div>
         <select class="set-lang lang select" name="lang">
           <option value="en" selected>EN</option>
@@ -104,18 +106,50 @@
         <div class="heading-tag setting-name">Image Tag</div>
         <input class="set-tag tag-input" type="text">
       </div>
-      <div class="todo-container">
-        <div class="todo-menu">Todo</div>
-        <div class="todo-content">
-          <div class="todo-heading">Todo List</div>
-          <div>
-            <ul class="todo-list"></ul>
+      <div class="extra-functionality">
+        <div class="links-container">
+          <div class="links-menu">Links</div>
+          <div class="links-content">
+            <div class="links-start">
+              <div class="links-chrome link"><a href="chrome-search://local-ntp/local-ntp.html">Chrome Tab</a></div>
+              <div class="links-apps link"><a href="chrome://apps/">Apps</a></div>
+              <div>
+                <ul class="links-list">
+                </ul>
+              </div>
+              <button class="links-new">New Link</button>
+            </div>
+            <div class="links-add closed">
+              <div class="links-back">&larr;</div>
+              <div class="link-name">Name</div>
+              <input class="name-input" type="text">
+              <div class="link-address">Link</div>
+              <input class="address-input" type="text" placeholder="https://example.com">
+              <button class="link-btn link-create">Create</button>
+            </div>
+            <div class="links-edition closed">
+              <div class="links-back-edit">&larr;</div>
+              <div class="link-name link-name-edit">Name</div>
+              <input class="name-input name-edit" type="text">
+              <div class="link-address link-address-edit">Link</div>
+              <input class="address-input address-edit" type="text">
+              <button class="link-btn link-save">Save</button>
+            </div>
           </div>
-          <div class="todo-box">
-            <p class="todo-text">Add a todo to get started</p>
-            <div class="todo-btn"><span>New Todo</span></div>
+        </div>
+        <div class="todo-container">
+          <div class="todo-menu">Todo</div>
+          <div class="todo-content">
+            <div class="todo-heading">Todo List</div>
+            <div>
+              <ul class="todo-list"></ul>
+            </div>
+            <div class="todo-box">
+              <p class="todo-text">Add a todo to get started</p>
+              <div class="todo-btn"><span>New Todo</span></div>
+            </div>
+            <input class="todo-new" placeholder="&nbsp;New Todo"></input>
           </div>
-          <input class="todo-new" placeholder="&nbsp;New Todo"></input>
         </div>
       </div>
     </div>
