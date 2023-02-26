@@ -391,7 +391,7 @@ body {
   min-height: 20px;
 }
 
-.footer-menues {
+.footer-menus {
   min-height: 30px;
 }
 
@@ -424,7 +424,7 @@ body {
   border-radius: 10px;
   position: fixed;
   left: -260px;
-  bottom: 60px;
+  bottom: 100px;
   transition: 0.7s;
 }
 
@@ -546,7 +546,7 @@ body {
   border-radius: 10px;
   position: fixed;
   right: -300px;
-  bottom: 60px;
+  bottom: 100px;
   transition: 0.7s;
 }
 
@@ -555,44 +555,8 @@ body {
 }
 
 .todo-heading {
+  font-size: 18px;
   display: flex;
-  /* margin-bottom: 10px; */
-}
-
-.todo-current {
-  font-size: 20px;
-  margin-right: 5px;
-}
-
-.todo-current:hover {
-  cursor: pointer;
-}
-
-.todo-current:hover~.todo-arrow {
-  background-color: #2a2a2a;
-  box-shadow: 0 0 5px 0 #eee;
-  border-radius: 50%;
-  cursor: pointer;
-  opacity: 1;
-  transition: 0.3s;
-}
-
-.todo-arrow {
-  align-self: center;
-  width: 20px;
-  height: 20px;
-  background-size: 20px 20px;
-  background-image: url("../assets/png/chevron-down.png");
-  opacity: .8;
-}
-
-.todo-arrow:hover {
-  background-color: #2a2a2a;
-  box-shadow: 0 0 5px 0 #eee;
-  border-radius: 50%;
-  cursor: pointer;
-  opacity: 1;
-  transition: 0.3s;
 }
 
 .todo-list {
@@ -609,6 +573,10 @@ body {
   display: flex;
   justify-content: space-between;
   margin-bottom: 4px;
+}
+
+.todo-item.closed {
+  display: none;
 }
 
 .task-checkbox {
@@ -632,28 +600,6 @@ body {
 .task-delete:hover {
   cursor: pointer;
   opacity: 1;
-}
-
-.todo-folders {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  text-align: start;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  width: 180px;
-  height: 100px;
-  border: none;
-  border-radius: 10px;
-  background-color: #2a2a2a;
-  color: #ccc;
-  margin-top: 5px;
-  opacity: .8;
-  display: none;
-}
-
-.todo-folders.open {
-  display: flex;
 }
 
 .todo-elem {
@@ -684,20 +630,6 @@ body {
 
 .todo-text {
   margin-top: 10px;
-}
-
-.todo-switch {
-  color: #aaa9a9;
-  cursor: pointer;
-}
-
-.todo-switch:hover {
-  color: #fff;
-  transition: 0.3s;
-}
-
-.todo-switch span {
-  font-size: 18px;
 }
 
 .todo-btn {
@@ -746,6 +678,47 @@ body {
   color: #ccc;
 }
 
+.footer-credits {
+  width: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.author {
+  align-self: center;
+}
+
+.author a {
+  text-decoration: none;
+  color: #ccc;
+  opacity: .8;
+}
+
+.author a:hover {
+  opacity: 1;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.year {
+  align-self: center;
+  color: #ccc;
+  opacity: .8;
+}
+
+.school {
+  min-width: 70px;
+  padding: 2px;
+  opacity: .7;
+  filter: drop-shadow(1px 1px 20px #ffffff);
+}
+
+.school:hover {
+  opacity: 1;
+  transition: 0.3s;
+  cursor: pointer;
+}
 
 
 @media (max-width: 768px) {

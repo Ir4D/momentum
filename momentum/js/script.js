@@ -31,8 +31,6 @@ let playNum = 0;
 const playListLength = playList.length;
 const playArr = document.getElementsByTagName('li');
 const playListContainer = document.querySelector('.play-list');
-
-
 const dateVars = {
   'en': 'en-US',
   'ru': 'ru-RU'
@@ -124,26 +122,30 @@ const headingImgTag = document.querySelector('.heading-tag');
 const inputTag = document.querySelector('.tag-input');
 const setImage = document.querySelector('.set-image');
 const todoVars = {
-  'today': {
-    'en': 'Today',
-    'ru': 'Сегодня'
-  },
-  'inbox': {
-    'en': 'Inbox',
-    'ru': 'Входящие'
-  },
-  'done': {
-    'en': 'Done',
-    'ru': 'Выполнено'
+  // 'today': {
+  //   'en': 'Today',
+  //   'ru': 'Сегодня'
+  // },
+  // 'inbox': {
+  //   'en': 'Inbox',
+  //   'ru': 'Входящие'
+  // },
+  // 'done': {
+  //   'en': 'Done',
+  //   'ru': 'Выполнено'
+  // },
+  'heading': {
+    'en': 'Todo List',
+    'ru': 'Список задач'
   },
   'text': {
     'en': 'Add a todo to get started',
     'ru': 'Добавьте задачу, чтобы начать'
   },
-  'switch': {
-    'en': 'Switch to',
-    'ru': 'Перейти к'
-  },
+  // 'switch': {
+  //   'en': 'Switch to',
+  //   'ru': 'Перейти к'
+  // },
   'new': {
     'en': 'New Todo',
     'ru': 'Новая задача'
@@ -757,17 +759,12 @@ window.addEventListener('load', getLocalStorageSettings);
 /* Todo List */
 const todoMenu = document.querySelector('.todo-menu');
 const todoContent = document.querySelector('.todo-content');
-const todoToday = document.querySelector('.todo-today');
-const todoInbox = document.querySelector('.todo-inbox');
-const todoDone = document.querySelector('.todo-done');
 const todoBtn = document.querySelector('.todo-btn');
 const todoNew = document.querySelector('.todo-new');
 const todoHeading = document.querySelector('.todo-heading');
-const todoFolders = document.querySelector('.todo-folders');
 const todoBox = document.querySelector('.todo-box');
 const todoList = document.querySelector('.todo-list');
 const todoText = document.querySelector('.todo-text');
-const todoSwitch = document.querySelector('.todo-switch');
 let allTasks = [];
 
 if (localStorage.getItem('allTasks')) {
@@ -776,12 +773,12 @@ if (localStorage.getItem('allTasks')) {
     const taskClass = task.done ? 'task-title task-done' : 'task-title';
     const taskChecked = task.done ? 'checked' : '';
     const taskTemplate = `<li id="${task.id}" class="todo-item task">
-                      <div class="task-info">
-                        <input type="checkbox" class="task-checkbox" ${taskChecked}>
-                        <span class="${taskClass}">${task.text}</span>
-                      </div>
-                      <div class="task-delete"></div>
-                    </li>`
+                            <div class="task-info">
+                              <input type="checkbox" class="task-checkbox" ${taskChecked}>
+                              <span class="${taskClass}">${task.text}</span>
+                            </div>
+                            <div class="task-delete"></div>
+                            </li>`
     todoList.insertAdjacentHTML('beforeend', taskTemplate);
     todoContent.style.height = 'auto';
     todoNew.value = '';
@@ -806,16 +803,6 @@ todoBtn.addEventListener('click', (e) => {
   todoNew.focus();
 })
 
-todoHeading.addEventListener('click', (e) => {
-  todoFolders.classList.toggle('open');
-  todoList.classList.toggle('closed');
-  if (todoFolders.classList.contains('open')) {
-    todoBox.classList.add('closed');
-  } else if (allTasks.length === 0) {
-    todoBox.classList.remove('closed');
-  }
-})
-
 getEmptyTodoList();
 
 function addTask() {
@@ -834,10 +821,10 @@ function addTask() {
                     </div>
                     <div class="task-delete"></div>
                   </li>`
+  
   todoList.insertAdjacentHTML('beforeend', taskTemplate);
   todoContent.style.height = 'auto';
   todoNew.value = '';
-
   getEmptyTodoList();
   setTodolist()
 }
@@ -846,14 +833,13 @@ todoNew.addEventListener('change', addTask);
 function deleteTask(event) {
   if (event.target.classList != 'task-delete') return;
   const itemToDelete = event.target.closest('.task');
-
   const id = Number(itemToDelete.id);
   const index = allTasks.findIndex(function (task) {
+    console.log(task.id);
     return (task.id === id);
   });
   allTasks.splice(index, 1);
   itemToDelete.remove();
-
   getEmptyTodoList();
   setTodolist()
 }
@@ -862,28 +848,26 @@ todoList.addEventListener('click', deleteTask);
 function doTask(event) {
   if (event.target.type == 'checkbox') {
     event.target.closest('.task').querySelector('.task-title').classList.toggle('task-done');
-  } 
+  }
   const id = Number(event.target.closest('.task').id);
   const task = allTasks.find(function (task) {
     return task.id === id;
   });
   task.done = !task.done;
-
-  setTodolist()
+  setTodolist();
 }
 todoList.addEventListener('click', doTask);
 
 function getEmptyTodoList() {
-  if (allTasks.length === 0) {
-    // todoBox.style.display = 'block';
+  if (allTasks.length == 0) {
     todoBox.classList.remove('closed');
     todoBtn.style.display = 'flex';
     todoNew.style.display = 'none';
     todoContent.style.height = '220px';
   } else {
     todoNew.style.display = 'block';
-    // todoBox.style.display = 'none';
     todoBox.classList.add('closed');
+    todoContent.style.height = 'auto';
   }
 }
 
@@ -891,17 +875,12 @@ function setTodolist() {
   localStorage.setItem('allTasks', JSON.stringify(allTasks));
 }
 
-
 function setTodoLang() {
-  todoToday.textContent = `${todoVars['today'][selectLang.value]}`;
-  todoInbox.textContent = `${todoVars['inbox'][selectLang.value]}`;
-  todoDone.textContent = `${todoVars['done'][selectLang.value]}`;
+  todoHeading.textContent = `${todoVars['heading'][selectLang.value]}`;
   todoText.textContent = `${todoVars['text'][selectLang.value]}`;
-  todoSwitch.textContent = `${todoVars['switch'][selectLang.value]}`;
   todoBtn.textContent = `${todoVars['new'][selectLang.value]}`;
   todoNew.placeholder = `${todoVars['new'][selectLang.value]}`;
 }
 setTodoLang();
-
 
 // localStorage.clear();
