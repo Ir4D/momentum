@@ -122,18 +122,6 @@ const headingImgTag = document.querySelector('.heading-tag');
 const inputTag = document.querySelector('.tag-input');
 const setImage = document.querySelector('.set-image');
 const todoVars = {
-  // 'today': {
-  //   'en': 'Today',
-  //   'ru': 'Сегодня'
-  // },
-  // 'inbox': {
-  //   'en': 'Inbox',
-  //   'ru': 'Входящие'
-  // },
-  // 'done': {
-  //   'en': 'Done',
-  //   'ru': 'Выполнено'
-  // },
   'heading': {
     'en': 'Todo List',
     'ru': 'Список задач'
@@ -142,10 +130,6 @@ const todoVars = {
     'en': 'Add a todo to get started',
     'ru': 'Добавьте задачу, чтобы начать'
   },
-  // 'switch': {
-  //   'en': 'Switch to',
-  //   'ru': 'Перейти к'
-  // },
   'new': {
     'en': 'New Todo',
     'ru': 'Новая задача'
@@ -170,7 +154,6 @@ showTime();
 
 /* show date: 'Tuesday, 14 February' */
 function showDate() {
-  // date.textContent = new Date().toLocaleDateString('en-GB', dateOptions);
   date.textContent = new Date().toLocaleDateString(dateVars[selectLang.value], dateOptions);
   setTimeout(showDate, 100);
 }
@@ -180,7 +163,6 @@ showDate();
 let timeOfDay;
 function getTimeOfDay() {
   const hours = new Date().getHours();
-  // let timeOfDay;
   if (0 <= hours/6 && hours/6 < 1) {
     timeOfDay = 'night';
     timeOfDayNum = 0;
@@ -194,7 +176,6 @@ function getTimeOfDay() {
     timeOfDay = 'evening';
     timeOfDayNum = 3;
   };
-  // greeting.textContent = `Good ${timeOfDay},`;
   setTimeout(getTimeOfDay, 1000);
   return timeOfDay;
 }
@@ -203,7 +184,6 @@ getTimeOfDay();
 /* add user name and city to the storage */
 function setLocalStorage() {
   localStorage.setItem('userName', userName.value);
-  // localStorage.setItem('city', city.value);
 }
 window.addEventListener('beforeunload', setLocalStorage);
 
@@ -231,7 +211,6 @@ function getLocalStorage() {
   if (localStorage.getItem('city')) {
     city.value = localStorage.getItem('city');
   } else {
-    // city.value = 'Minsk';
     city.value = weatherVars['city'][selectLang.value];
   }
   if (localStorage.getItem('tag')) {
@@ -265,8 +244,6 @@ async function getLinkToImageUnsplash() {
     body.style.backgroundImage = `url('${result.urls.regular}')`;
   }
 }
-// getLinkToImageUnsplash();
-
 
 async function getLinkToImageFlickr() {
   const img = new Image();
@@ -279,7 +256,6 @@ async function getLinkToImageFlickr() {
     body.style.backgroundImage = `url('${result.photos.photo[randomPhotoNum].url_l}')`;
   }
 }
-// getLinkToImageFlickr();
 
 function setBackground() {
   const img = new Image();
@@ -292,8 +268,6 @@ function setBackground() {
     body.style.backgroundImage = `url('https://raw.githubusercontent.com/Ir4D/stage1-tasks/assets/images/${timeOfDay}/${randomNum}.jpg')`;
   }
 }
-// setBackground();
-
 
 function setBg() {
   if (setImage.value === 'github') {
@@ -351,10 +325,8 @@ slidePrev.addEventListener('click', getslidePrev);
 /* weather widget */
 async function getWeather() {
   if (city.value === '') {
-    // city.value = 'Minsk';
     city.value = weatherVars['city'][selectLang.value];
   }
-  // const url = `https://api.openweathermap.org/data/2.5/weather?q=${city.value}&lang=en&appid=0fe1a130729e5592daaf209c9d35966d&units=metric`;
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city.value}&lang=${selectLang.value}&appid=0fe1a130729e5592daaf209c9d35966d&units=metric`;
   const res = await fetch(url);
   const data = await res.json();
@@ -373,9 +345,7 @@ async function getWeather() {
     weatherIcon.classList.add(`owf-${data.weather[0].id}`);
     temperature.textContent = `${Math.floor(data.main.temp)}°C`;
     weatherDescription.textContent = data.weather[0].description;
-    // wind.textContent = `Wind speed: ${Math.floor(data.wind.speed)} m/s`;
     wind.textContent = `${weatherVars['speed'][selectLang.value]}: ${Math.floor(data.wind.speed)} ${weatherVars['speedUnit'][selectLang.value]}`;
-    // humidity.textContent = `Humidity: ${Math.floor(data.main.humidity)}%`;
     humidity.textContent = `${weatherVars['humidity'][selectLang.value]}: ${Math.floor(data.main.humidity)}%`;
   }
 }
@@ -396,8 +366,6 @@ async function getQuotes() {
   const res = await fetch(quotes);
   const data = await res.json();
   getQuoteNumber(data.length);
-  // quote.textContent = data[quoteNumber].text;
-  // author.textContent = data[quoteNumber].author;
   if (selectLang.value === 'en') {
     quote.textContent = data[quoteNumber].en.text;
     author.textContent = data[quoteNumber].en.author;
@@ -753,7 +721,6 @@ function getLocalStorageSettings() {
   }
 }
 window.addEventListener('load', getLocalStorageSettings);
-
 
 
 /* Todo List */
